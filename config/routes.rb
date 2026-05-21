@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   resources :categories, only: [:index, :show]
   resources :registrations, only: [:index, :show]
   resources :reviews, only: [:index, :show]
+  resources :venues
 end

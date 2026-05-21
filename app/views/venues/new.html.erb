@@ -1,0 +1,26 @@
+<%= form_with model: venue, local: true do |f| %>
+  <% if venue.errors.any? %>
+    <div class="alert alert-danger">
+      <% venue.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, class: "form-label" %>
+    <%= f.text_field :name, class: "form-control", placeholder: "Venue name", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :address, class: "form-label" %>
+    <%= f.text_field :address, class: "form-control", placeholder: "Full address", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :capacity, class: "form-label" %>
+    <%= f.number_field :capacity, class: "form-control", placeholder: "Max capacity", min: 1 %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

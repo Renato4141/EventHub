@@ -1,6 +1,7 @@
 class Event < ApplicationRecord
   belongs_to :user
   belongs_to :venue, optional: true
+  has_rich_text :description
   has_many :registrations, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :event_categories, dependent: :destroy

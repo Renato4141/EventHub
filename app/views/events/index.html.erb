@@ -1,33 +1,31 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h1>Events</h1>
-</div>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Events</h1>
+    <%= link_to "New Event", new_event_path, class: "btn btn-primary" %>
+  </div>
 
-<table class="table table-striped table-hover">
-  <thead class="table-dark">
-    <tr>
-      <th>Name</th>
-      <th>Date</th>
-      <th>Location</th>
-      <th>Capacity</th>
-      <th>Status</th>
-      <th>Organizer</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @events.each do |event| %>
-      <tr>
-        <td><%= event.name %></td>
-        <td><%= event.date.strftime("%d %b %Y") %></td>
-        <td><%= event.location %></td>
-        <td><%= event.capacity %></td>
-        <td>
-          <% badge = { "draft" => "secondary", "published" => "success", "finished" => "dark" } %>
-          <span class="badge bg-<%= badge[event.status] %>"><%= event.status.capitalize %></span>
-        </td>
-        <td><%= event.user.name %></td>
-        <td><%= link_to "View", event_path(event), class: "btn btn-sm btn-outline-primary" %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+  <% if @events.empty? %>
+    <p class="text-muted">No events yet.</p>
+  <% else %>
+    <div class="row">
+      <% @events.each do |event| %>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title"><%= link_to event.name, event %></h5>
+              <p class="card-text text-muted"><%= event.date.strftime("%B %d, %Y") %></p>
+              <p class="card-text"><%= event.location %></p>
+              <span class="badge bg-<%= event.published? ? 'success' : event.draft? ? 'secondary' : 'dark' %>">
+                <%= event.status.capitalize %>
+              </span>
+            </div>
+            <div class="card-footer">
+              <%= link_to "View", event, class: "btn btn-sm btn-outline-primary" %>
+              <%= link_to "Edit", edit_event_path(event), class: "btn btn-sm btn-warning" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

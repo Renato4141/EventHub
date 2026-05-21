@@ -1,23 +1,9 @@
-<div class="mb-3">
-  <%= link_to "← Back to Categories", categories_path, class: "btn btn-outline-secondary" %>
+<div class="container mt-4">
+  <h1><%= @category.name %></h1>
+
+  <div class="mt-3">
+    <%= link_to "Edit", edit_category_path(@category), class: "btn btn-warning" %>
+    <%= link_to "Delete", @category, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
+    <%= link_to "Back to Categories", categories_path, class: "btn btn-secondary" %>
+  </div>
 </div>
-
-<h1 class="mb-4"><%= @category.name %></h1>
-
-<h4>Events in this category (<%= @category.events.count %>)</h4>
-<table class="table table-striped">
-  <thead class="table-dark">
-    <tr><th>Name</th><th>Date</th><th>Status</th><th></th></tr>
-  </thead>
-  <tbody>
-    <% @category.events.each do |event| %>
-      <% badge = { "draft" => "secondary", "published" => "success", "finished" => "dark" } %>
-      <tr>
-        <td><%= event.name %></td>
-        <td><%= event.date.strftime("%d %b %Y") %></td>
-        <td><span class="badge bg-<%= badge[event.status] %>"><%= event.status.capitalize %></span></td>
-        <td><%= link_to "View", event_path(event), class: "btn btn-sm btn-outline-primary" %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>

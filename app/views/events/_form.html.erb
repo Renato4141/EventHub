@@ -18,10 +18,18 @@
   </div>
 
   <div class="row">
-    <div class="col-md-6 mb-3">
-      <%= f.label :date, "Start Date", class: "form-label" %>
-      <%= f.datetime_local_field :date, class: "form-control", required: true %>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <%= f.label :start_date, "Start Date", class: "form-label" %>
+        <%= f.datetime_local_field :start_date, class: "form-control", required: true %>
+      </div>
+      
+      <div class="col-md-6">
+        <%= f.label :end_date, "End Date", class: "form-label" %>
+        <%= f.datetime_local_field :end_date, class: "form-control", required: true %>
+      </div>
     </div>
+    
     <div class="col-md-6 mb-3">
       <%= f.label :capacity, class: "form-label" %>
       <%= f.number_field :capacity, class: "form-control", placeholder: "Max attendees", min: 1, required: true %>

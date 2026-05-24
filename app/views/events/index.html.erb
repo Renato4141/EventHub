@@ -13,7 +13,7 @@
           <div class="card h-100">
             <div class="card-body">
               <h5 class="card-title"><%= link_to event.name, event %></h5>
-              <p class="card-text text-muted"><%= event.date.strftime("%B %d, %Y") %></p>
+              <p class="card-text text-muted"><%= event.start_date.strftime("%B %d, %Y") %></p>
               <p class="card-text"><%= event.location %></p>
               <span class="badge bg-<%= event.published? ? 'success' : event.draft? ? 'secondary' : 'dark' %>">
                 <%= event.status.capitalize %>

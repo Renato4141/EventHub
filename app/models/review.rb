@@ -12,7 +12,7 @@ class Review < ApplicationRecord
   private
 
   def event_must_be_finished
-    if event.present? && event.date > Date.today
+    if event.present? && event.start_date > Date.today
       errors.add(:event, "must be finished to review")
     end
   end

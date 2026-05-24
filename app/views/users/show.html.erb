@@ -19,7 +19,7 @@
       <% badge = { "draft" => "secondary", "published" => "success", "finished" => "dark" } %>
       <tr>
         <td><%= event.name %></td>
-        <td><%= event.date.strftime("%d %b %Y") %></td>
+        <td><%= event.start_date.strftime("%d %b %Y") %></td>
         <td><span class="badge bg-<%= badge[event.status] %>"><%= event.status.capitalize %></span></td>
         <td><%= link_to "View", event_path(event), class: "btn btn-sm btn-outline-primary" %></td>
       </tr>

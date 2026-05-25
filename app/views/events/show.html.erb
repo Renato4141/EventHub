@@ -24,8 +24,8 @@
       <hr>
 
       <p><strong>Start Date:</strong> <%= @event.start_date.strftime("%B %d, %Y %H:%M") %></p>
-      <p><strong>End Date:</strong> <%= @event.end_date.strftime("%B %d, %Y %H:%M") %></p>
-      <p><strong>Location:</strong> <%= @event.location %></p>
+      <p><strong>Start Date:</strong> <%= @event.start_date&.strftime("%B %d, %Y %H:%M") %></p>
+      <p><strong>End Date:</strong> <%= @event.end_date&.strftime("%B %d, %Y %H:%M") || "Not set" %></p>
       <p><strong>Capacity:</strong> <%= @event.capacity %></p>
       <p><strong>Available spots:</strong> <%= @event.available_spots %></p>
       <p><strong>Organizer:</strong> <%= @event.user.name %></p>

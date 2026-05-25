@@ -1,4 +1,4 @@
-<%= form_with model: venue, local: true do |f| %>
+<%= form_with model: venue, data: { turbo: false } do |f| %>
   <% if venue.errors.any? %>
     <div class="alert alert-danger">
       <% venue.errors.full_messages.each do |msg| %>

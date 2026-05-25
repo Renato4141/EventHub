@@ -122,7 +122,7 @@
           <div class="card mb-4">
             <div class="card-body">
               <h5 class="card-title">Leave a Review</h5>
-              <%= form_with model: Review.new, url: reviews_path, local: true do |f| %>
+              <%= form_with model: Review.new, url: reviews_path, data: { turbo: false } do |f| %>
                 <%# Campo oculto para mandar el event_id al controlador %>
                 <%= f.hidden_field :event_id, value: @event.id %>
 

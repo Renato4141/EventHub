@@ -1,6 +1,5 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_organizer, only: [:edit, :update, :destroy]
 
   def index
     @events = Event.all
@@ -49,11 +48,4 @@ class EventsController < ApplicationController
   def event_params
     params.require(:event).permit(:name, :description, :start_date, :end_date, :capacity, :location, :venue_id, :status, category_ids: [])
   end
-
-  def authorize_organizer
-    unless @event.user == current_user
-      redirect_to @event, alert: "Access denied. Only the organizer can perform this action."
-    end
-  end
-
 end

@@ -2,14 +2,13 @@
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1><%= @event.name %></h1>
     
-    <%# 1. Etiqueta dinámica para los 5 estados posibles del evento %>
     <span class="badge bg-<%= 
       case @event.status
       when 'published' then 'success'
       when 'ongoing'   then 'info'
       when 'finished'  then 'dark'
       when 'cancelled' then 'danger'
-      else 'secondary' # draft
+      else 'secondary'
       end
     %> fs-6">
       <%= @event.status.to_s.capitalize %>
@@ -23,7 +22,6 @@
 
       <hr>
 
-      <p><strong>Start Date:</strong> <%= @event.start_date.strftime("%B %d, %Y %H:%M") %></p>
       <p><strong>Start Date:</strong> <%= @event.start_date&.strftime("%B %d, %Y %H:%M") %></p>
       <p><strong>End Date:</strong> <%= @event.end_date&.strftime("%B %d, %Y %H:%M") || "Not set" %></p>
       <p><strong>Capacity:</strong> <%= @event.capacity %></p>
@@ -48,11 +46,9 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Registrations</h5>
-          <%# Solo mostramos confirmed y waitlisted, cancelled se mantiene interno %>
           <p>Confirmed: <%= @event.registrations.confirmed.count %></p>
           <p>Waitlisted: <%= @event.registrations.waitlisted.count %></p>
 
-          <%# 2. El registro SOLO se permite si el evento está "published" %>
           <% if @event.published? %>
             <% if @event.full? %>
               <div class="alert alert-warning p-2 text-center mb-2" style="font-size: 0.85rem;">
@@ -67,11 +63,21 @@
                   class: "btn btn-success w-100" %>
             <% end %>
           <% else %>
-            <%# Bloqueado para draft, ongoing, finished y cancelled %>
             <button class="btn btn-secondary w-100" disabled>Registration unavailable</button>
             <p class="text-muted mt-2 text-center" style="font-size: 0.85rem;">
               Currently <%= @event.status %>.
             </p>
+          <% end %>
+
+          <% user_reg = @event.registrations.find_by(user: current_user) %>
+          <% if user_reg && !user_reg.cancelled? %>
+            <hr>
+            <p class="text-muted" style="font-size: 0.85rem;">
+              Your status: <strong><%= user_reg.status.capitalize %></strong>
+            </p>
+            <%= button_to "Cancel Registration", registration_path(user_reg), method: :delete,
+                data: { turbo_confirm: "Cancel your registration?" },
+                class: "btn btn-outline-danger w-100 mt-1" %>
           <% end %>
         </div>
       </div>
@@ -80,18 +86,15 @@
 
   <hr>
 
-  <%# 3. Lógica del Organizador %>
   <div class="mt-3 d-flex gap-2">
     <%= link_to "Edit", edit_event_path(@event), class: "btn btn-warning" %>
     
-    <%# Solo se puede publicar si es un borrador %>
     <% if @event.draft? %>
       <%= button_to "Publish Event", event_path(@event), method: :patch, 
           params: { event: { status: 'published' } }, 
           class: "btn btn-success" %>
     <% end %>
 
-    <%# Solo se puede cancelar un borrador o un evento publicado (no los finished ni ongoing) %>
     <% if @event.draft? || @event.published? %>
       <%= button_to "Cancel Event", event_path(@event), method: :patch, 
           params: { event: { status: 'cancelled' } }, 
@@ -109,12 +112,38 @@
     <% @event.reviews.each do |review| %>
       <div class="card mb-2">
         <div class="card-body">
-          <p><strong><%= review.user.name %></strong>  <%= review.rating %>/5</p>
+          <p><strong><%= review.user.name %></strong> — <%= review.rating %>/5</p>
           <p><%= review.comment %></p>
+          <% if review.user == current_user %>
+            <%= link_to "Delete", review, data: { turbo_method: :delete, turbo_confirm: "Delete this review?" }, class: "btn btn-sm btn-danger" %>
+          <% end %>
         </div>
       </div>
     <% end %>
   <% else %>
     <p class="text-muted">No reviews yet.</p>
+  <% end %>
+
+  <% user_registration = @event.registrations.find_by(user: current_user, status: :confirmed) %>
+  <% already_reviewed = @event.reviews.exists?(user: current_user) %>
+
+  <% if @event.finished? && user_registration && !already_reviewed %>
+    <div class="card mt-3">
+      <div class="card-body">
+        <h5>Write a Review</h5>
+        <%= form_with url: reviews_path, local: true do |f| %>
+          <%= f.hidden_field :review, name: "review[event_id]", value: @event.id %>
+          <div class="mb-3">
+            <%= f.label :rating, class: "form-label" %>
+            <%= f.number_field :rating, name: "review[rating]", class: "form-control", min: 1, max: 5, required: true, placeholder: "1 to 5" %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :comment, class: "form-label" %>
+            <%= f.text_area :comment, name: "review[comment]", class: "form-control", rows: 3, placeholder: "Your experience..." %>
+          </div>
+          <%= f.submit "Submit Review", class: "btn btn-primary" %>
+        <% end %>
+      </div>
+    </div>
   <% end %>
 </div>

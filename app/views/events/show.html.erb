@@ -108,42 +108,70 @@
   <hr>
 
   <h3>Reviews</h3>
+
+  <%# Lógica para mostrar u ocultar el formulario de reseña %>
+  <% if current_user %>
+    <% if @event.finished? %>
+      <% if @event.registrations.exists?(user: current_user, status: :confirmed) %>
+        <%# Verificamos si el usuario ya dejó una reseña para no mostrarle el formulario dos veces %>
+        <% if @event.reviews.exists?(user: current_user) %>
+          <div class="alert alert-success">
+            You have already reviewed this event. Thank you for your feedback!
+          </div>
+        <% else %>
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">Leave a Review</h5>
+              <%= form_with model: Review.new, url: reviews_path, local: true do |f| %>
+                <%# Campo oculto para mandar el event_id al controlador %>
+                <%= f.hidden_field :event_id, value: @event.id %>
+
+                <div class="mb-3">
+                  <%= f.label :rating, class: "form-label" %>
+                  <%= f.select :rating, options_for_select([["5 Stars", 5], ["4 Stars", 4], ["3 Stars", 3], ["2 Stars", 2], ["1 Star", 1]]), {}, class: "form-select" %>
+                </div>
+
+                <div class="mb-3">
+                  <%= f.label :comment, class: "form-label" %>
+                  <%= f.text_area :comment, rows: 3, class: "form-control", placeholder: "Share your experience..." %>
+                </div>
+
+                <%= f.submit "Submit Review", class: "btn btn-primary" %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-muted">Only confirmed attendees can leave a review.</p>
+      <% end %>
+    <% elsif @event.published? || @event.ongoing? %>
+      <p class="text-muted">Reviews will open once the event is completed.</p>
+    <% end %>
+  <% else %>
+    <p class="text-muted"><%= link_to "Sign in", new_user_session_path %> to leave a review.</p>
+  <% end %>
+
+  <%# Lista de reseñas existentes %>
   <% if @event.reviews.any? %>
     <% @event.reviews.each do |review| %>
       <div class="card mb-2">
         <div class="card-body">
-          <p><strong><%= review.user.name %></strong> — <%= review.rating %>/5</p>
-          <p><%= review.comment %></p>
-          <% if review.user == current_user %>
-            <%= link_to "Delete", review, data: { turbo_method: :delete, turbo_confirm: "Delete this review?" }, class: "btn btn-sm btn-danger" %>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <strong><%= review.user.name %></strong>
+            <span class="badge bg-warning text-dark"><%= review.rating %> / 5 ⭐</span>
+          </div>
+          <p class="mb-0"><%= review.comment %></p>
+          
+          <%# Botón para que el autor pueda borrar su propia reseña %>
+          <% if current_user == review.user %>
+            <div class="mt-2 text-end">
+              <%= button_to "Delete Review", review_path(review), method: :delete, data: { turbo_confirm: "Delete your review?" }, class: "btn btn-sm btn-outline-danger" %>
+            </div>
           <% end %>
         </div>
       </div>
     <% end %>
   <% else %>
-    <p class="text-muted">No reviews yet.</p>
-  <% end %>
-
-  <% user_registration = @event.registrations.find_by(user: current_user, status: :confirmed) %>
-  <% already_reviewed = @event.reviews.exists?(user: current_user) %>
-
-  <% if @event.finished? && user_registration && !already_reviewed %>
-    <div class="card mt-3">
-      <div class="card-body">
-        <h5>Write a Review</h5>
-        <%= form_with url: reviews_path, local: true do |f| %>
-          <%= f.hidden_field :review, name: "review[event_id]", value: @event.id %>
-          <div class="mb-3">
-            <%= f.label :rating, class: "form-label" %>
-            <%= f.number_field :rating, name: "review[rating]", class: "form-control", min: 1, max: 5, required: true, placeholder: "1 to 5" %>
-          </div>
-          <div class="mb-3">
-            <%= f.label :comment, class: "form-label" %>
-            <%= f.text_area :comment, name: "review[comment]", class: "form-control", rows: 3, placeholder: "Your experience..." %>
-          </div>
-          <%= f.submit "Submit Review", class: "btn btn-primary" %>
-        <% end %>
-      </div>
-    </div>
+    <p class="text-muted mt-3">No reviews yet.</p>
   <% end %>
 </div>

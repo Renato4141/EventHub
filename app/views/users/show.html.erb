@@ -36,7 +36,7 @@
     <% @user.registrations.each do |r| %>
       <tr>
         <td><%= link_to r.event.name, event_path(r.event) %></td>
-        <td><span class="badge bg-<%= r.confirmed? ? 'success' : r.pending? ? 'warning' : 'danger' %>"><%= r.status.capitalize %></span></td>
+        <td><span class="badge bg-<%= r.confirmed? ? 'success' : r.waitlisted? ? 'warning' : 'danger' %>"><%= r.status.capitalize %></span></td>
       </tr>
     <% end %>
   </tbody>

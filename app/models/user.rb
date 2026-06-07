@@ -1,14 +1,13 @@
 class User < ApplicationRecord
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
+
   has_many :events, dependent: :destroy
   has_many :registrations, dependent: :destroy
   has_many :reviews, dependent: :destroy
-
   has_many :events_attended, through: :registrations, source: :event
 
-  enum :role, { attendee: 0, organizer: 1, admin: 2 }, default: :attendee  # ← NUEVO
+  enum :role, { regular: 0, admin: 2 }, default: :regular
 
-  validates :name, :email, presence: true
-  validates :name, length: { minimum: 2, maximum: 50 }                      # ← NUEVO
-  validates :email, uniqueness: true,
-                    format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :name, presence: true, length: { minimum: 2, maximum: 50 }
 end

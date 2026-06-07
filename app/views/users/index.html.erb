@@ -5,6 +5,7 @@
     <tr>
       <th>Name</th>
       <th>Email</th>
+      <th>Role</th>
       <th>Events Organized</th>
       <th></th>
     </tr>
@@ -14,6 +15,11 @@
       <tr>
         <td><%= user.name %></td>
         <td><%= user.email %></td>
+        <td>
+          <span class="badge bg-<%= user.admin? ? 'danger' : 'secondary' %>">
+            <%= user.role.capitalize %>
+          </span>
+        </td>
         <td><%= user.events.count %></td>
         <td><%= link_to "View", user_path(user), class: "btn btn-sm btn-outline-primary" %></td>
       </tr>

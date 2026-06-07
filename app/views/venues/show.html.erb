@@ -4,13 +4,13 @@
   <p><strong>Capacity:</strong> <%= @venue.capacity || "Not specified" %></p>
 
   <div class="mt-3 d-flex gap-2 align-items-center">
-    <%= link_to "Edit", edit_venue_path(@venue), class: "btn btn-warning" %>
-    
-    <%= button_to "Delete", venue_path(@venue), 
-                  method: :delete, 
-                  data: { turbo_confirm: "Are you sure?" }, 
-                  class: "btn btn-danger" %>
-    
+    <% if user_signed_in? && current_user.admin? %>
+      <%= link_to "Edit", edit_venue_path(@venue), class: "btn btn-warning" %>
+      <%= button_to "Delete", venue_path(@venue),
+                    method: :delete,
+                    data: { turbo_confirm: "Are you sure?" },
+                    class: "btn btn-danger" %>
+    <% end %>
     <%= link_to "Back to Venues", venues_path, class: "btn btn-secondary" %>
   </div>
 </div>

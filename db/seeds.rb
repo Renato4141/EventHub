@@ -7,11 +7,12 @@ Category.destroy_all
 User.destroy_all
 
 # USERS
-alice = User.create!(name: "Alice Martínez", email: "alice@test.com", password: "123456", role: :organizer)
-bob   = User.create!(name: "Bob Torres",     email: "bob@test.com",   password: "123456", role: :attendee)
-carol = User.create!(name: "Carol Núñez",    email: "carol@test.com", password: "123456", role: :attendee)
-david = User.create!(name: "David Lagos",    email: "david@test.com", password: "123456", role: :organizer)
-eva   = User.create!(name: "Eva Ríos",       email: "eva@test.com",   password: "123456", role: :attendee)
+admin = User.create!(name: "Admin User", email: "admin@eventhub.com", password: "password123", role: :admin)
+alice = User.create!(name: "Alice Martínez", email: "alice@eventhub.com", password: "password123", role: :regular)
+bob   = User.create!(name: "Bob Torres",     email: "bob@eventhub.com",   password: "password123", role: :regular)
+carol = User.create!(name: "Carol Núñez",    email: "carol@eventhub.com", password: "password123", role: :regular)
+david = User.create!(name: "David Lagos",    email: "david@eventhub.com", password: "password123", role: :regular)
+eva   = User.create!(name: "Eva Ríos",       email: "eva@eventhub.com",   password: "password123", role: :regular)
 
 # CATEGORIES
 tech   = Category.create!(name: "Technology")
@@ -35,7 +36,7 @@ rails_conf = Event.new(
   end_date: 60.days.ago + 3.days,
   location: "Santiago",
   capacity: 100,
-  status: :published, # <- Temporalmente publicado para permitir registros
+  status: :published,
   user: alice,
   venue: riesco
 )
@@ -48,7 +49,7 @@ jazz_night = Event.new(
   end_date: 30.days.ago + 4.hours,
   location: "Valparaíso",
   capacity: 80,
-  status: :published, # <- Temporalmente publicado
+  status: :published,
   user: bob,
   venue: puerto
 )
@@ -114,23 +115,17 @@ EventCategory.create!(event: art_expo,      category: art)
 EventCategory.create!(event: hackathon,     category: art)
 
 # REGISTRATIONS
-# --- Registros de Eventos Pasados ---
-# Simulamos que se registraron días ANTES de que el evento empezara
 Registration.create!(user: bob,   event: rails_conf, created_at: rails_conf.start_date - 10.days)
 Registration.create!(user: carol, event: rails_conf, created_at: rails_conf.start_date - 5.days)
-# Para forzar un estado cancelado sobreescribiendo el callback:
 david_reg = Registration.create!(user: david, event: rails_conf, created_at: rails_conf.start_date - 2.days)
 david_reg.update!(status: :cancelled)
 
 Registration.create!(user: alice, event: jazz_night, created_at: jazz_night.start_date - 7.days)
 Registration.create!(user: eva,   event: jazz_night, created_at: jazz_night.start_date - 2.days)
 
-# CIERRE: Ahora que la gente se registró, cerramos los eventos como en la vida real
 rails_conf.update!(status: :finished)
 jazz_night.update!(status: :finished)
 
-# --- Registros de Eventos Futuros ---
-# Hackathon (Capacidad: 2). Bob y Carol entran, Eva y David se van a waitlist AUTOMÁTICAMENTE por el callback.
 Registration.create!(user: bob,   event: hackathon)
 Registration.create!(user: carol, event: hackathon)
 Registration.create!(user: eva,   event: hackathon)
@@ -140,10 +135,9 @@ Registration.create!(user: alice, event: food_festival)
 
 Registration.create!(user: carol, event: marathon)
 Registration.create!(user: david, event: marathon)
-Registration.create!(user: eva, event: marathon)
+Registration.create!(user: eva,   event: marathon)
 
-
-# REVIEWS (solo en eventos finished)
+# REVIEWS
 Review.create!(user: bob,   event: rails_conf, rating: 5, comment: "Excellent talks, very well organized.")
 Review.create!(user: carol, event: rails_conf, rating: 4, comment: "Great content but the venue was a bit small.")
 Review.create!(user: alice, event: jazz_night, rating: 5, comment: "Incredible atmosphere and great musicians.")
@@ -151,3 +145,8 @@ Review.create!(user: eva,   event: jazz_night, rating: 4, comment: "Loved the mu
 
 puts "Seeded: #{User.count} users, #{Venue.count} venues, #{Event.count} events, #{Category.count} categories"
 puts "        #{Registration.count} registrations, #{Review.count} reviews"
+puts ""
+puts "Login credentials:"
+puts "  admin@eventhub.com / password123  (admin)"
+puts "  alice@eventhub.com / password123  (regular)"
+puts "  bob@eventhub.com   / password123  (regular)"

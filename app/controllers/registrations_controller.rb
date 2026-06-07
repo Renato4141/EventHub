@@ -1,23 +1,19 @@
 class RegistrationsController < ApplicationController
   before_action :set_registration, only: [:show, :destroy]
+  before_action :authenticate_user!, except: [:index, :show]
 
   def index
     @registrations = Registration.includes(:user, :event).all
   end
 
   def show
+    authorize @registration
   end
 
   def create
     @event = Event.find(params[:registration][:event_id])
     @registration = Registration.new(user: current_user, event: @event)
-
-    active_count = @event.registrations.where(status: [:confirmed, :pending]).count
-    if active_count >= @event.capacity
-      @registration.status = :waitlisted
-    else
-      @registration.status = :confirmed
-    end
+    authorize @registration
 
     if @registration.save
       redirect_to @event, notice: "Successfully registered!"
@@ -27,6 +23,7 @@ class RegistrationsController < ApplicationController
   end
 
   def destroy
+    authorize @registration
     @event = @registration.event
 
     if @registration.confirmed?

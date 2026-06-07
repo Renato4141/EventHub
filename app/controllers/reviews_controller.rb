@@ -1,11 +1,13 @@
 class ReviewsController < ApplicationController
   before_action :set_review, only: [:show, :destroy]
+  before_action :authenticate_user!, except: [:index, :show]
 
   def index
     @reviews = Review.includes(:user, :event).all
   end
 
   def show
+    authorize @review
   end
 
   def create
@@ -13,6 +15,7 @@ class ReviewsController < ApplicationController
     @review = Review.new(review_params)
     @review.user = current_user
     @review.event = @event
+    authorize @review
 
     if @review.save
       redirect_to @event, notice: "Review submitted successfully."
@@ -22,7 +25,7 @@ class ReviewsController < ApplicationController
   end
 
   def destroy
-    @review = Review.find(params[:id])
+    authorize @review
     @event = @review.event
     @review.destroy
     redirect_to @event, notice: "Review deleted."

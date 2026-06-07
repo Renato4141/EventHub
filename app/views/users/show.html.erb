@@ -4,8 +4,18 @@
 
 <div class="card mb-4">
   <div class="card-body">
-    <h1><%= @user.name %></h1>
-    <p class="text-muted"><%= @user.email %></p>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1><%= @user.name %></h1>
+        <p class="text-muted mb-1"><%= @user.email %></p>
+        <span class="badge bg-<%= @user.admin? ? 'danger' : 'secondary' %>">
+          <%= @user.role.capitalize %>
+        </span>
+      </div>
+      <% if user_signed_in? && current_user == @user %>
+        <%= link_to "Edit profile", edit_user_registration_path, class: "btn btn-warning" %>
+      <% end %>
+    </div>
   </div>
 </div>
 
@@ -16,7 +26,7 @@
   </thead>
   <tbody>
     <% @user.events.each do |event| %>
-      <% badge = { "draft" => "secondary", "published" => "success", "finished" => "dark" } %>
+      <% badge = { "draft" => "secondary", "published" => "success", "finished" => "dark", "cancelled" => "danger" } %>
       <tr>
         <td><%= event.name %></td>
         <td><%= event.start_date.strftime("%d %b %Y") %></td>

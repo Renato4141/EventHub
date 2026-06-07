@@ -1,7 +1,9 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1>Events</h1>
-    <%= link_to "New Event", new_event_path, class: "btn btn-primary" %>
+    <% if user_signed_in? %>
+      <%= link_to "New Event", new_event_path, class: "btn btn-primary" %>
+    <% end %>
   </div>
 
   <% if @events.empty? %>
@@ -15,13 +17,18 @@
               <h5 class="card-title"><%= link_to event.name, event %></h5>
               <p class="card-text text-muted"><%= event.start_date.strftime("%B %d, %Y") %></p>
               <p class="card-text"><%= event.location %></p>
-              <span class="badge bg-<%= event.published? ? 'success' : event.draft? ? 'secondary'  : event.cancelled? ? 'danger' : 'dark'%>">
+              <p class="card-text">
+                <small class="text-muted">By <%= link_to event.user.name, user_path(event.user) %></small>
+              </p>
+              <span class="badge bg-<%= event.published? ? 'success' : event.draft? ? 'secondary' : event.cancelled? ? 'danger' : 'dark' %>">
                 <%= event.status.capitalize %>
               </span>
             </div>
             <div class="card-footer">
               <%= link_to "View", event, class: "btn btn-sm btn-outline-primary" %>
-              <%= link_to "Edit", edit_event_path(event), class: "btn btn-sm btn-warning" %>
+              <% if user_signed_in? && (current_user == event.user || current_user.admin?) %>
+                <%= link_to "Edit", edit_event_path(event), class: "btn btn-sm btn-warning" %>
+              <% end %>
             </div>
           </div>
         </div>

@@ -1,8 +1,16 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    @events = Event.all
+    @events = if user_signed_in? && current_user.admin?
+      Event.all
+    elsif user_signed_in?
+      Event.where(status: [:published, :finished, :ongoing, :cancelled])
+          .or(Event.where(user: current_user))
+    else
+      Event.where(status: [:published, :finished, :ongoing, :cancelled])
+    end
   end
 
   def show
@@ -10,12 +18,14 @@ class EventsController < ApplicationController
 
   def new
     @event = Event.new
+    authorize @event
   end
 
   def create
     @event = Event.new(event_params)
     @event.status = :draft
     @event.user = current_user
+    authorize @event
     if @event.save
       redirect_to @event, notice: "Event created successfully."
     else
@@ -24,9 +34,11 @@ class EventsController < ApplicationController
   end
 
   def edit
+    authorize @event
   end
 
   def update
+    authorize @event
     if @event.update(event_params)
       redirect_to @event, notice: "Event updated successfully."
     else
@@ -35,6 +47,7 @@ class EventsController < ApplicationController
   end
 
   def destroy
+    authorize @event
     @event.update(status: :cancelled)
     redirect_to events_path, notice: "Event cancelled."
   end

@@ -1,4 +1,4 @@
-```markdown
+
 # EventHub
 
 **Group Members:**
@@ -29,6 +29,7 @@ bundle install
 ### Install JavaScript dependencies
 ```bash
 yarn install
+yarn build:css
 ```
 
 ### Configure the database
@@ -113,4 +114,4 @@ Authentication is handled by Devise with support for:
 ## Authorization (Pundit)
 
 Authorization is handled by Pundit with a policy class per resource. Unauthorized actions redirect the user with an appropriate error message.
-```
+

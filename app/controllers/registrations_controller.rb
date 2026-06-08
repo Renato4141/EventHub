@@ -1,6 +1,6 @@
 class RegistrationsController < ApplicationController
   before_action :set_registration, only: [:show, :destroy]
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!
 
   def index
     @registrations = Registration.includes(:user, :event).all
@@ -25,6 +25,11 @@ class RegistrationsController < ApplicationController
   def destroy
     authorize @registration
     @event = @registration.event
+
+    if @event.end_date < Time.current
+      redirect_to @event, alert: "You cannot cancel your registration for an event that has already ended."
+      return
+    end
 
     if @registration.confirmed?
       first_waitlisted = @event.registrations.waitlisted.order(:created_at).first

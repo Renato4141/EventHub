@@ -14,7 +14,9 @@
 
   <div class="mb-3">
     <%= f.label :description, class: "form-label" %>
-    <%= f.rich_text_area :description, class: "form-control" %>
+    <div class="rich-text-wrapper">
+      <%= f.rich_text_area :description %>
+    </div>
   </div>
 
   <div class="row">

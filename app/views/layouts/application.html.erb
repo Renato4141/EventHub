@@ -13,7 +13,184 @@
       .hero-section { background: #afcff0; padding: 100px 0; }
       .footer { background: #212529; color: white; padding: 40px 0; }
       .contact-section { background: #afcff0; }
+
+      .rich-text-wrapper {
+        border: 1px solid #ced4da;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+      }
+
+      .rich-text-wrapper:focus-within {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.18),
+                    0 1px 4px rgba(0, 0, 0, 0.08);
+      }
+
+      /* ── 1. Barra de herramientas ── */
+      trix-toolbar {
+        background: linear-gradient(to bottom, #f8f9fa, #f1f3f5) !important;
+        border: none !important;
+        border-bottom: 1px solid #dee2e6 !important;
+        border-radius: 0 !important;
+        padding: 6px 10px 6px 10px !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 4px !important;
+        align-items: center !important;
+      }
+
+      /* ── 2. Grupos de botones ── */
+      trix-toolbar .trix-button-group {
+        border: 1px solid #dee2e6 !important;
+        border-radius: 6px !important;
+        background: #ffffff !important;
+        margin: 0 !important;
+        overflow: hidden;
+        display: flex !important;
+      }
+
+      trix-toolbar .trix-button-group:not(:last-child) {
+        margin-right: 6px !important;
+      }
+
+      /* ── 3. Botones individuales ── */
+      trix-toolbar .trix-button {
+        border: none !important;
+        background: transparent !important;
+        padding: 5px 11px !important;
+        height: 30px !important;
+        color: #495057 !important;
+        font-size: 13px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: background-color 0.12s ease, color 0.12s ease;
+        border-right: 1px solid #f0f0f0 !important;
+      }
+
+      trix-toolbar .trix-button:last-child {
+        border-right: none !important;
+      }
+
+      trix-toolbar .trix-button:hover {
+        background-color: #e8f0fe !important;
+        color: #1a73e8 !important;
+      }
+
+      trix-toolbar .trix-button--active {
+        background-color: #d2e3fc !important;
+        color: #1558d6 !important;
+        font-weight: 600;
+      }
+
+      /* Íconos SVG nativos de Trix más visibles */
+      trix-toolbar .trix-button::before {
+        opacity: 0.75;
+      }
+      trix-toolbar .trix-button--active::before,
+      trix-toolbar .trix-button:hover::before {
+        opacity: 1;
+      }
+
+      /* ── 4. Zona de escritura ── */
+      trix-editor {
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 1.1rem 1.25rem !important;
+        background-color: #ffffff !important;
+        min-height: 220px !important;
+        font-family: 'Georgia', 'Times New Roman', serif !important;
+        font-size: 15.5px !important;
+        line-height: 1.75 !important;
+        color: #212529 !important;
+        caret-color: #1a73e8;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
+      /* ── 5. Tipografía dentro del editor ── */
+      trix-editor h1 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #1a1a2e;
+        border-bottom: 2px solid #afcff0;
+        padding-bottom: 4px;
+      }
+
+      trix-editor blockquote {
+        border-left: 3px solid #afcff0 !important;
+        padding-left: 1rem !important;
+        color: #6c757d !important;
+        font-style: italic;
+        margin: 0.5rem 0 0.5rem 0.5rem;
+      }
+
+      trix-editor pre {
+        background: #f6f8fa;
+        border: 1px solid #e1e4e8;
+        border-radius: 4px;
+        padding: 0.75rem 1rem;
+        font-family: 'Courier New', monospace;
+        font-size: 13.5px;
+        overflow-x: auto;
+      }
+
+      trix-editor ul, trix-editor ol {
+        padding-left: 1.5rem;
+      }
+
+      trix-editor a {
+        color: #1a73e8;
+        text-decoration: underline;
+      }
+
+      /* ── 6. Barra de diálogos (links, etc.) ── */
+      trix-toolbar .trix-dialogs {
+        border-top: 1px solid #dee2e6 !important;
+        background: #f8f9fa !important;
+        padding: 8px 12px !important;
+      }
+
+      trix-toolbar .trix-input--dialog {
+        border: 1px solid #ced4da !important;
+        border-radius: 4px !important;
+        padding: 4px 8px !important;
+        font-size: 13px !important;
+      }
+
+      trix-toolbar .trix-button--dialog {
+        background: #1a73e8 !important;
+        color: white !important;
+        border-radius: 4px !important;
+        padding: 4px 12px !important;
+        font-size: 13px !important;
+      }
+
+      /* ── 7. Adjuntos (imágenes, archivos) ── */
+      trix-editor .attachment {
+        border: 2px dashed #afcff0;
+        border-radius: 6px;
+        padding: 4px;
+      }
+
+      trix-editor .attachment__caption {
+        font-size: 12px;
+        color: #6c757d;
+        text-align: center;
+        padding: 4px 0;
+      }
+
+      /* ── 8. Placeholder visual ── */
+      trix-editor:empty::before {
+        color: #adb5bd;
+        font-style: italic;
+      }
     </style>
+
+    
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -68,19 +245,27 @@
       </div>
     </nav>
 
-    <% if notice %>
-      <div class="alert alert-success alert-dismissible fade show mx-3 mt-2" role="alert">
-        <%= notice %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-    <% end %>
+    <div class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 1100; min-width: 320px; max-width: 90%;">
+          <% if notice %>
+            <div class="alert alert-success alert-dismissible fade show shadow" role="alert">
+              <div class="d-flex align-items-center">
+                <span class="me-2"></span>
+                <div><%= notice %></div>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <% end %>
 
-    <% if alert %>
-      <div class="alert alert-danger alert-dismissible fade show mx-3 mt-2" role="alert">
-        <%= alert %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-    <% end %>
+          <% if alert %>
+            <div class="alert alert-danger alert-dismissible fade show shadow" role="alert">
+              <div class="d-flex align-items-center">
+                <span class="me-2"></span>
+                <div><%= alert %></div>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <% end %>
+        </div>
 
     <% if current_page?(root_path) %>
       <main>
